@@ -112,6 +112,25 @@ class AssignString(Operation):
         return AssignString(uuid.UUID(data["exp_uuid"]), data["path"], data["value"])
 
 
+class UploadFile(Operation):
+
+    def __init__(self, exp_uuid: uuid.UUID, path: List[str], file_path: str):
+        super().__init__(exp_uuid, path)
+        self.file_path = file_path
+
+    def accept(self, visitor: 'OperationVisitor[Ret]') -> Ret:
+        return visitor.visit_upload_file(self)
+
+    def to_dict(self) -> dict:
+        ret = super().to_dict()
+        ret["file_path"] = self.file_path
+        return ret
+
+    @staticmethod
+    def from_dict(data: dict) -> 'UploadFile':
+        return UploadFile(uuid.UUID(data["exp_uuid"]), data["path"], data["file_path"])
+
+
 class LogFloats(Operation):
 
     def __init__(self, exp_uuid: uuid.UUID, path: List[str], values: List[float]):

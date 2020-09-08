@@ -17,6 +17,7 @@
 from typing import TYPE_CHECKING, Union, Iterable
 
 from neptune.types.value import Value
+from neptune.types.atoms.file import File
 
 from neptune.types.sets.string_set import StringSet
 
@@ -50,13 +51,16 @@ class Handler:
         else:
             raise AttributeError()
 
-    def assign(self, value: Union[Value, int, float, str], wait: bool = False) -> None:
+    def assign(self, value: Union[Value, int, float, str, File], wait: bool = False) -> None:
         with self._experiment.lock():
             var = self._experiment.get_attribute(self._path)
             if var:
                 var.assign(value, wait)
             else:
                 self._experiment.define(self._path, value, wait)
+
+    def save(self, value: str, wait: bool = False) -> None:
+        self.assign(File(value), wait)
 
     def log(self, value: Union[int, float, str], step=None, timestamp=None, wait: bool = False) -> None:
         with self._experiment.lock():

@@ -20,7 +20,6 @@ from typing import Dict, Any, Union
 
 from neptune.internal.background_job import BackgroundJob
 from neptune.types.atoms.string import String
-
 from neptune.types.atoms.float import Float
 
 from neptune.internal.backends.neptune_backend import NeptuneBackend
