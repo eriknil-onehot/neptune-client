@@ -18,7 +18,7 @@
 from mock import patch, MagicMock, call
 from neptune.variables.series.string_series import StringSeries, StringSeriesVal
 
-from neptune.internal.operation import LogSeriesValue, ClearStringLog, LogStrings
+from neptune.internal.operation import ClearStringLog, LogStrings
 from tests.neptune.variables.test_variable_base import TestVariableBase
 
 
@@ -27,7 +27,7 @@ class TestStringSeries(TestVariableBase):
 
     def test_assign(self):
         value = StringSeriesVal(["aaaa", "bbc"])
-        expected = [LogSeriesValue[str]("aaaa", None, self._now()), LogSeriesValue[str]("bbc", None, self._now())]
+        expected = [LogStrings.ValueType("aaaa", None, self._now()), LogStrings.ValueType("bbc", None, self._now())]
 
         backend, processor = MagicMock(), MagicMock()
         exp, path, wait = self._create_experiment(backend, processor), self._random_path(), self._random_wait()
@@ -54,8 +54,8 @@ class TestStringSeries(TestVariableBase):
 
     def test_log(self):
         value_and_expected = [
-            ("xyz", LogSeriesValue[str]("xyz", None, self._now())),
-            ("abc", LogSeriesValue[str]("abc", None, self._now()))
+            ("xyz", LogStrings.ValueType("xyz", None, self._now())),
+            ("abc", LogStrings.ValueType("abc", None, self._now()))
         ]
 
         for value, expected in value_and_expected:
@@ -67,8 +67,8 @@ class TestStringSeries(TestVariableBase):
 
     def test_log_with_step(self):
         value_step_and_expected = [
-            ("xyz", 5.3, LogSeriesValue[str]("xyz", 5.3, self._now())),
-            ("abc", 10, LogSeriesValue[str]("abc", 10, self._now()))
+            ("xyz", 5.3, LogStrings.ValueType("xyz", 5.3, self._now())),
+            ("abc", 10, LogStrings.ValueType("abc", 10, self._now()))
         ]
 
         for value, step, expected in value_step_and_expected:
@@ -80,8 +80,8 @@ class TestStringSeries(TestVariableBase):
 
     def test_log_with_timestamp(self):
         value_step_and_expected = [
-            ("xyz", 5.3, LogSeriesValue[str]("xyz", None, 5.3)),
-            ("abc", 10, LogSeriesValue[str]("abc", None, 10))
+            ("xyz", 5.3, LogStrings.ValueType("xyz", None, 5.3)),
+            ("abc", 10, LogStrings.ValueType("abc", None, 10))
         ]
 
         for value, ts, expected in value_step_and_expected:
